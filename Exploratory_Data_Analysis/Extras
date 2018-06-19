@@ -1,0 +1,130 @@
+#Second peer asessment
+setwd("C:\\Users\\ssopic\\Desktop\\Coursera\\4. Exploratory data analysis\\Second assignment")
+#Getting the data
+zipurl <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip"
+download.file(zipurl, destfile ="C:\\Users\\ssopic\\Desktop\\Coursera\\4. Exploratory data analysis\\Second assignment\\data.zip")
+unzip("data.zip")
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+intersect(names(NEI), names(SCC))
+#These datasets connect on only one variable so we merge them with the SCC
+total <- merge(NEI, SCC, by="SCC")
+#Removing the old datasets
+rm(NEI)
+rm(SCC)
+#Observing the data and its variables
+###################################################################
+
+#SCC
+#Was used in merging the tables
+str(total$SCC)
+
+#fips, a string indicating the county
+str(total$fips)
+
+#Emission variable
+str(total$Emissions)
+
+#Type variable
+str(total$type) #Shows the type of the observations
+total$type <- as.factor(total$type) #Changing the variable into a factor variable
+
+#looking at the year variable and changing it into a date variable
+names(total)
+total$year <- as.Date(as.character(total$year), "%Y")
+
+#Category variable
+#contains the expanded data of type. The assignment states to use the type variable so we can remove this one
+str(total$Data.Category)
+levels(total$Data.Category)
+levels(total$type)
+total$Data.Category <- NULL
+
+#Short.Name Variable
+#factor with 11238 levels. Not important for this assignment so it was removed
+str(total$Short.Name)
+summary(total$Short.Name)
+total$Short.Name <- NULL
+
+#EI.Sector variable
+#Contains the sector(eg. Agriculutre, Dust-construction dust etc.), 59 levels
+#Not important for this assignment so it was removed.
+str(total$EI.Sector)
+levels(total$EI.Sector)
+total$EI.Sector <- NULL
+
+#Option-Group variable
+#Probably contains futher data on the EI. Sector variable, 25 levels, one is an empty string probably showing the NA's
+#Not needed for this assignmet so it was removed.
+str(total$Option.Group)
+levels(total$Option.Group)
+total$Option.Group <- NULL
+
+#Option.Set variable
+#Contains a factor variable with 18 levels
+#Not important for this analysis so it was removed.
+str(total$Option.Set)
+levels(total$Option.Set)
+total$Option.Set <- NULL
+
+#SCC.Level.One
+#Contains sources of pollution. Mentions External combustion boilers. We are looking for coal combustion related issues in question 4 so we continue looking for that variable
+str(total$SCC.Level.One)
+levels(total$SCC.Level.One)
+
+#SCC.Level.Two
+#Factor with 146 levels, does not contain coal combustion 
+str(total$SCC.Level.Two)
+levels(total$SCC.Level.Two)
+names(total)
+
+#SCC.Level.Three
+str(total$SCC.Level.Three)
+levels(total$SCC.Level.Three)
+
+#SCC.Level.Four
+str(total$SCC.Level.Four)
+levels(total$SCC.Level.Four)
+
+#Factor pollutant
+#We know that all of the pollutants here are pm25's so we can remove this collumn
+factorPollutant <- as.factor(total$Pollutant)
+str(factorPollutant)
+total$Pollutant <- NULL
+
+#Map.To 
+#This variable is not important in the analysis so it was removed
+str(total$Map.To)
+summary(total$Map.To)
+total$Map.To <- NULL
+
+#Last.Inventory.Year
+#Probably contains the data on the last inventory year(last time a site was used?)
+#Removed
+str(total$Last.Inventory.Year)
+summary(total$Last.Inventory.Year)
+total$Last.Inventory.Year <- NULL
+
+#Created_date
+#Shows the date the site was created
+#Not used in this analysis so it will be removed
+str(total$Created_Date)
+total$Created_Date <- NULL
+
+#Revised_date
+#Date data
+#Removed
+str(total$Revised_Date)
+total$Revised_Date <- NULL
+
+
+#Usage.Notes
+#Factor with 21 levels
+#Contains additional data on some notes, two empty levels etc.
+#removed
+str(total$Usage.Notes)
+levels(total$Usage.Notes)
+total$Usage.Notes <- NULL
+
+#Total removed variables
+##################################################################
